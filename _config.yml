@@ -10,10 +10,10 @@
 ############################
 
 # Name of website
-title: Onur Canoplu | My Website
+title: Onur Canoğlu 
 
 # Your name to show in the footer
-author: Some Person
+author: Onur Canoğlu
 
 ###############################################
 # --- List of links in the navigation bar --- #
@@ -53,9 +53,6 @@ social-network-links:
   email: "onurcanoglu7@gmail.com"
   rss: true  # remove this line if you don't want to show an RSS link at the bottom
   github: canogluonur
-  twitter: daattali
-  patreon: DeanAttali
-  youtube: c/daattali
   medium: onurcanoglu
 #  reddit: yourname
 #  linkedin: daattali
