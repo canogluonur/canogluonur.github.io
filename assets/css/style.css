@@ -134,15 +134,17 @@ body {
   50% { box-shadow: 0 0 0 6px rgba(126, 231, 135, 0); }
 }
 .top-bar-label {
-  font-size: 0.7rem;
-  color: var(--text-dim);
+  font-size: 0.75rem;
+  color: var(--text-bright);
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  font-weight: 600;
 }
 .top-bar-right {
-  font-size: 0.7rem;
-  color: var(--text-dim);
+  font-size: 0.72rem;
+  color: var(--text);
   font-family: var(--font);
+  letter-spacing: 0.02em;
 }
 
 /* Hero section */
