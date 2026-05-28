@@ -1,0 +1,10 @@
+_site
+.sass-cache
+.vagrant
+.DS_Store
+Thumbs.db
+Gemfile.lock
+*.gem
+node_modules
+.vscode
+.idea

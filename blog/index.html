@@ -1,0 +1,27 @@
+---
+layout: default
+title: Blog
+---
+
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Blog</h2>
+    {% if site.posts.size > 0 %}
+    <ul class="blog-list">
+      {% for post in site.posts %}
+      <li class="blog-item">
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+        <div class="blog-date">
+          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y" }}</time>
+        </div>
+        {% if post.excerpt %}
+        <p class="blog-excerpt">{{ post.excerpt | strip_html | truncate: 200 }}</p>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p style="text-align:center;color:var(--text-muted);">No posts yet. Coming soon!</p>
+    {% endif %}
+  </div>
+</section>
