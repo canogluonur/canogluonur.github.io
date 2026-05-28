@@ -438,7 +438,10 @@ document.addEventListener('DOMContentLoaded', function() {
           '  <span style="color:var(--cyan);">vim</span> / <span style="color:var(--cyan);">emacs</span>   Easter eggs',
           '  <span style="color:var(--cyan);">figlet</span>         ASCII art text',
           '  <span style="color:var(--cyan);">lolcat</span>         Rainbow text',
-          '  <span style="color:var(--cyan);">cmatrix</span>        Matrix rain'
+          '  <span style="color:var(--cyan);">cmatrix</span>        Matrix rain',
+          '  <span style="color:var(--cyan);">pipeline</span>       Show CI/CD pipeline',
+          '  <span style="color:var(--cyan);">monitor</span>        Show monitoring stats',
+          '  <span style="color:var(--cyan);">top</span>            Show running processes'
         ].join('\n');
 
       case 'about':
@@ -659,6 +662,93 @@ document.addEventListener('DOMContentLoaded', function() {
           '</div>',
           '<div style="color:var(--text-dim);font-size:0.65rem;">Type <span style="color:var(--cyan);">cmatrix stop</span> to stop</div>'
         ].join('\n');
+
+      case 'pipeline':
+        return [
+          '<div style="display:flex;align-items:center;gap:4px;padding:8px 0;flex-wrap:nowrap;">',
+          '  <span style="color:var(--cyan);font-size:0.6rem;">Code</span>',
+          '  <span style="color:var(--text-dim);font-size:1rem;">\u2192</span>',
+          '  <span style="color:var(--purple);font-size:0.6rem;">Build</span>',
+          '  <span style="color:var(--text-dim);font-size:1rem;">\u2192</span>',
+          '  <span style="color:var(--green);font-size:0.6rem;">Test</span>',
+          '  <span style="color:var(--text-dim);font-size:1rem;">\u2192</span>',
+          '  <span style="color:var(--yellow);font-size:0.6rem;">Deploy</span>',
+          '  <span style="color:var(--text-dim);font-size:1rem;">\u2192</span>',
+          '  <span style="color:var(--cyan);font-size:0.6rem;">Monitor</span>',
+          '</div>',
+          '<div style="display:flex;flex-direction:column;gap:4px;font-size:0.72rem;line-height:1.5;">',
+          '  <div><span style="color:var(--text-dim);">commit:</span> <span style="color:var(--cyan);">2a3f1b7</span> <span style="background:rgba(121,192,255,0.1);border:1px solid rgba(121,192,255,0.15);padding:0 6px;border-radius:8px;font-size:0.6rem;color:var(--cyan);">main</span></div>',
+          '  <div><span style="color:var(--text-dim);">build:</span> <span style="color:var(--green);">\u2713</span> 12.4s</div>',
+          '  <div><span style="color:var(--text-dim);">test:</span> <span style="color:var(--green);">\u2713</span> 142 passed, 0 failed</div>',
+          '  <div><span style="color:var(--text-dim);">deploy:</span> <span style="color:var(--yellow);">\u25CF</span> rolling out to production (85%)</div>',
+          '  <div><span style="color:var(--text-dim);">monitor:</span> <span style="color:var(--green);">\u2713</span> all healthy | 200 req/s | p95 45ms</div>',
+          '</div>'
+        ].join('\n');
+
+      case 'monitor':
+        var cpu = Math.floor(Math.random() * 20 + 10);
+        var mem = Math.floor(Math.random() * 30 + 40);
+        var disk = Math.floor(Math.random() * 15 + 30);
+        var reqs = Math.floor(Math.random() * 100 + 150);
+        var p95 = Math.floor(Math.random() * 20 + 30);
+        var err = (Math.random() * 0.5).toFixed(2);
+        return [
+          '<div style="display:flex;flex-direction:column;gap:5px;padding:4px 0;font-size:0.75rem;line-height:1.6;">',
+          '  <div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;">',
+          '    <span><span style="color:var(--text-dim);">CPU:</span> ' + cpu + '% <span style="color:var(--green);">\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591\u2591</span></span>',
+          '    <span><span style="color:var(--text-dim);">MEM:</span> ' + mem + '% <span style="color:var(--yellow);">\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591</span></span>',
+          '    <span><span style="color:var(--text-dim);">DSK:</span> ' + disk + '% <span style="color:var(--cyan);">\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591\u2591\u2591</span></span>',
+          '  </div>',
+          '  <div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;">',
+          '    <span><span style="color:var(--text-dim);">requests:</span> <span style="color:var(--text-bright);">' + reqs + '</span> req/s</span>',
+          '    <span><span style="color:var(--text-dim);">p95 latency:</span> <span style="color:var(--text-bright);">' + p95 + '</span>ms</span>',
+          '    <span><span style="color:var(--text-dim);">error rate:</span> <span style="color:' + (err > 0.5 ? 'var(--red)' : 'var(--green)') + ';">' + err + '%</span></span>',
+          '  </div>',
+          '  <div style="margin-top:4px;display:flex;gap:12px;flex-wrap:wrap;font-size:0.68rem;">',
+          '    <span><span style="color:var(--green);">\u25CF</span> api-server</span>',
+          '    <span><span style="color:var(--green);">\u25CF</span> scheduler</span>',
+          '    <span><span style="color:var(--green);">\u25CF</span> controller-manager</span>',
+          '    <span><span style="color:var(--green);">\u25CF</span> etcd</span>',
+          '    <span><span style="color:var(--green);">\u25CF</span> coredns</span>',
+          '  </div>',
+          '</div>'
+        ].join('\n');
+
+      case 'top': {
+        var procs = [
+          { pid: 1, name: 'systemd', cpu: 0.3, mem: 0.8 },
+          { pid: 42, name: 'kube-apiserver', cpu: 2.1, mem: 4.2 },
+          { pid: 87, name: 'kube-scheduler', cpu: 0.6, mem: 1.1 },
+          { pid: 103, name: 'kube-controller', cpu: 0.8, mem: 1.5 },
+          { pid: 156, name: 'etcd', cpu: 1.2, mem: 3.8 },
+          { pid: 201, name: 'coredns', cpu: 0.2, mem: 0.9 },
+          { pid: 245, name: 'prometheus', cpu: 3.4, mem: 6.2 },
+          { pid: 289, name: 'grafana', cpu: 0.9, mem: 2.8 },
+          { pid: 312, name: 'nginx-ingress', cpu: 1.8, mem: 2.1 },
+          { pid: 356, name: 'argocd-server', cpu: 1.1, mem: 2.4 },
+          { pid: 398, name: 'actions-runner', cpu: 4.2, mem: 3.5 }
+        ];
+        var lines = [];
+        lines.push('  PID  USER       PR  NI  VIRT    RES     SHR S  %CPU  %MEM  TIME+    COMMAND');
+        for (var ti = 0; ti < procs.length; ti++) {
+          var p = procs[ti];
+          var pid = p.pid.toString().padEnd(5);
+          var user = 'onur     ';
+          var pr = '20';
+          var ni = '0';
+          var virt = (Math.floor(Math.random() * 500 + 200) + 'M').padEnd(7);
+          var res = (Math.floor(Math.random() * 200 + 50) + 'M').padEnd(7);
+          var shr = (Math.floor(Math.random() * 100 + 10) + 'M').padEnd(7);
+          var stat = 'S ';
+          var cpu = p.cpu.toFixed(1).padStart(5);
+          var mem = p.mem.toFixed(1).padStart(5);
+          var time = '0:' + (Math.floor(Math.random() * 30 + 1)).toString().padStart(2, '0') + '.12';
+          lines.push('  ' + pid + user + pr + '  ' + ni + '  ' + virt + res + shr + stat + cpu + '  ' + mem + '  ' + time + '  ' + p.name);
+        }
+        return [
+          '<pre style="font-size:0.6rem;line-height:1.5;margin:4px 0;color:var(--text);">' + lines.join('\n') + '</pre>'
+        ].join('\n');
+      }
 
       case 'curl':
         if (args[0] && args[0].match(/canoglu\.dev|localhost|onurcanoglu/)) {
