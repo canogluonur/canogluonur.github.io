@@ -455,14 +455,14 @@ body {
 /* Skills grid inside card */
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
 }
 .skill-card {
   background: transparent;
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 14px 8px;
+  padding: 18px 10px;
   text-align: center;
   transition: all var(--transition);
 }
@@ -472,15 +472,15 @@ body {
   transform: translateY(-1px);
 }
 .skill-card img {
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   opacity: 0.9;
 }
 .skill-card span {
   display: block;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   color: var(--text-dim);
 }
 
@@ -505,17 +505,17 @@ body {
 .cert-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 .cert-item img {
-  width: 40px;
-  height: 40px;
+  width: 52px;
+  height: 52px;
   object-fit: contain;
 }
 .cert-item span {
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   color: var(--text-dim);
-  font-weight: 500;
+  font-weight: 600;
 }
 .badges-row {
   display: flex;
