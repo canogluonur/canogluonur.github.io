@@ -181,6 +181,68 @@ document.addEventListener('DOMContentLoaded', function() {
   var cmdHistory = [];
   var histIdx = 0;
   var deployDate = new Date();
+  var cwd = '/home/onur/canogluonur.github.io';
+
+  var virtualFS = {
+    '/home/onur/canogluonur.github.io': {
+      'about.txt': 'Cloud-native infrastructure architect. Building scalable, resilient systems with Kubernetes, GitOps, and observability.',
+      'skills.txt': 'Kubernetes, Docker, Helm, ArgoCD, Terraform, Ansible, AWS, Azure, Prometheus, Grafana, Elasticsearch, Kibana, Kafka, RabbitMQ, PostgreSQL, MongoDB, Redis, Linux, Vault, GitLab CI, GitHub Actions',
+      'contact.md': 'GitHub: onurcanoglu | LinkedIn: onurcanoglu | Medium: @onurcanoglu | Email: onur@canoglu.dev',
+      'roles/': null,
+      'projects/': null,
+      'certs/': null
+    },
+    '/home/onur/canogluonur.github.io/roles': {
+      'tatilbudur.md': 'DevOps Specialist @ TatilBudur (Oct 2025 - Present)',
+      'artifact-systems.md': 'DevOps Engineer @ Artifact Systems (Aug 2024 - Oct 2025)',
+      'hexaworks.md': 'DevOps Engineer @ Hexaworks (Nov 2022 - Aug 2024)',
+      'aras-kargo.md': 'DevOps Intern @ Aras Kargo (Mar 2022 - Jun 2022)'
+    },
+    '/home/onur/canogluonur.github.io/projects': {
+      'project-1': 'Kubernetes cluster automation',
+      'project-2': 'GitOps pipeline with ArgoCD',
+      'project-3': 'Observability stack with Prometheus/Grafana/Loki/Tempo',
+      'project-4': 'Multi-cloud Terraform infrastructure',
+      'project-5': 'CI/CD pipeline with GitHub Actions',
+      'and-25-more': '... too many to list!'
+    },
+    '/home/onur/canogluonur.github.io/certs': {
+      'CKA': 'Certified Kubernetes Administrator',
+      'KCNA': 'Kubernetes and Cloud Native Associate',
+      'kcd-istanbul-organizer': 'KCD Istanbul 2023 Organizer',
+      'kubesphere-ambassador': 'KubeSphere Ambassador 2023'
+    }
+  };
+
+  function resolvePath(path) {
+    if (!path || path === '~') return '/home/onur/canogluonur.github.io';
+    if (path === '/') return '/home/onur/canogluonur.github.io';
+    if (path.startsWith('/')) return path;
+    if (path.startsWith('./')) path = path.slice(2);
+    var parts = path.split('/');
+    var cwdParts = cwd.split('/');
+    for (var pi = 0; pi < parts.length; pi++) {
+      if (parts[pi] === '..') {
+        if (cwdParts.length > 4) cwdParts.pop();
+      } else if (parts[pi] === '.' || parts[pi] === '') {
+        continue;
+      } else {
+        cwdParts.push(parts[pi]);
+      }
+    }
+    return cwdParts.join('/');
+  }
+
+  function listDir(dir) {
+    var entries = virtualFS[dir];
+    if (!entries) return null;
+    var files = [], dirs = [];
+    for (var key in entries) {
+      if (key.endsWith('/')) dirs.push(key);
+      else files.push(key);
+    }
+    return { files: files, dirs: dirs };
+  }
 
   function enableInteractiveMode() {
     if (interactiveActive) return;
@@ -336,6 +398,7 @@ document.addEventListener('DOMContentLoaded', function() {
           '  <span style="color:var(--cyan);">roles</span>          List experience',
           '  <span style="color:var(--cyan);">skills</span>         List technical skills',
           '  <span style="color:var(--cyan);">ls / ls -la</span>    List files',
+          '  <span style="color:var(--cyan);">cd</span>             Change directory',
           '  <span style="color:var(--cyan);">cat</span>            Read a file',
           '  <span style="color:var(--cyan);">education</span>      Show education &amp; certs',
           '  <span style="color:var(--cyan);">contact</span>        Show contact info',
@@ -486,7 +549,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }).join('\n');
 
       case 'pwd':
-        return '/home/onur/canogluonur.github.io';
+        return cwd;
+
+      case 'cd':
+        var target = args.join(' ') || '~';
+        var newDir = resolvePath(target);
+        if (!virtualFS[newDir]) return '  cd: ' + target + ': No such directory';
+        cwd = newDir;
+        return '';
 
       case 'echo':
         return args.join(' ') || '';
@@ -579,27 +649,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
       case 'ls':
       case 'll':
+        var lsDir = args.length > 0 && !args[0].startsWith('-') ? resolvePath(args[0]) : cwd;
+        var listing = listDir(lsDir);
+        if (!listing) return '  ls: ' + (args[0] || cwd) + ': No such directory';
         if (args.indexOf('-la') !== -1 || cmd === 'll') {
-          return [
-            '  total 42',
-            '  drwxr-xr-x  9 onur  staff  288 May 28 12:34 .',
-            '  drwxr-xr-x  3 onur  staff   96 May 28 12:34 ..',
-            '  -rw-r--r--  1 onur  staff  2.1K May 28 12:34 about.txt',
-            '  -rw-r--r--  1 onur  staff  1.2K May 28 12:34 skills.txt',
-            '  -rw-r--r--  1 onur  staff  1.5K May 28 12:34 contact.md',
-            '  drwxr-xr-x  4 onur  staff  128 May 28 12:34 roles',
-            '  drwxr-xr-x  3 onur  staff   96 May 28 12:34 projects',
-            '  drwxr-xr-x  2 onur  staff   64 May 28 12:34 certs'
-          ].join('\n');
+          var lsLines = [ '  total ' + (listing.files.length + listing.dirs.length) ];
+          lsLines.push('  drwxr-xr-x  9 onur  staff  288 May 28 12:34 .');
+          lsLines.push('  drwxr-xr-x  3 onur  staff   96 May 28 12:34 ..');
+          listing.dirs.forEach(function(d) {
+            lsLines.push('  drwxr-xr-x  4 onur  staff  128 May 28 12:34 ' + d.replace('/', ''));
+          });
+          listing.files.forEach(function(f) {
+            lsLines.push('  -rw-r--r--  1 onur  staff  1.2K May 28 12:34 ' + f);
+          });
+          return lsLines.join('\n');
         }
-        return '  about.txt  skills.txt  contact.md  roles/  projects/  certs/';
+        var all = listing.dirs.map(function(d) { return d.replace('/', '') + '/'; }).concat(listing.files);
+        return '  ' + all.join('  ');
 
       case 'cat':
         var file = args.join(' ');
         if (!file) return '  cat: missing operand';
-        if (file.match(/about/)) return 'Cloud-native infrastructure architect. Building scalable, resilient systems with Kubernetes, GitOps, and observability.';
-        if (file.match(/skills/)) return 'Kubernetes, Docker, Helm, ArgoCD, Terraform, Ansible, AWS, Azure, Prometheus, Grafana, Elasticsearch, Kibana, Kafka, RabbitMQ, PostgreSQL, MongoDB, Redis, Linux, Vault, GitLab CI, GitHub Actions';
-        if (file.match(/contact/)) return 'GitHub: onurcanoglu | LinkedIn: onurcanoglu | Medium: @onurcanoglu | Email: onur@canoglu.dev';
+        // Check if it contains a path separator
+        if (file.indexOf('/') !== -1) {
+          var parts = file.split('/');
+          var fname = parts.pop();
+          var fdir = resolvePath(parts.join('/'));
+          var fentries = virtualFS[fdir];
+          if (fentries && fentries[fname]) return fentries[fname];
+          return '  cat: ' + file + ': No such file or directory';
+        }
+        var entries = virtualFS[cwd];
+        if (entries && entries[file]) return entries[file];
         return '  cat: ' + file + ': No such file or directory';
 
       default:
