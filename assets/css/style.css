@@ -337,31 +337,120 @@ body {
   margin-left: 2px;
 }
 
-/* Quote block */
-.quote-block {
+/* iTerm2 window chrome */
+.window-chrome {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 28px 24px;
-  position: relative;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(0,0,0,0.25);
+  border-bottom: 1px solid var(--border);
 }
-.quote-mark {
-  font-size: 3rem;
-  color: var(--text-muted);
-  line-height: 1;
-  margin-bottom: -8px;
-  font-family: serif;
+.window-dots {
+  display: flex;
+  gap: 7px;
 }
-.quote-content {
-  font-size: 0.82rem;
-  color: var(--text);
-  line-height: 1.7;
-  font-style: italic;
-  margin-bottom: 8px;
+.wdot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
 }
-.quote-source {
+.wdot.red { background: #ff5f56; }
+.wdot.yellow { background: #ffbd2e; }
+.wdot.green { background: #27c93f; }
+.window-title {
   font-size: 0.7rem;
   color: var(--text-dim);
+  margin-left: 4px;
+}
+.window-body {
+  padding: 20px 24px;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+/* Terminal lines inside window */
+.window-body .line {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 3px;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+.window-body .line .prompt {
+  color: var(--green);
+  flex-shrink: 0;
+}
+.window-body .line .cmd {
+  color: var(--text-bright);
+}
+.window-body .hero-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin: 6px 0 2px;
+  letter-spacing: -0.02em;
+}
+.window-body .hero-title {
+  font-size: 0.88rem;
+  color: var(--purple);
+  margin-bottom: 8px;
+}
+.window-body .hero-desc {
+  font-size: 0.82rem;
+  color: var(--text);
+  max-width: 560px;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+.window-body .badges {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin: 4px 0;
+}
+.window-body .badge {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  background: rgba(121, 192, 255, 0.08);
+  color: var(--blue);
+  border: 1px solid rgba(121, 192, 255, 0.12);
+}
+
+/* Terminal output fade-in */
+.terminal-output {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.4s ease, max-height 0.5s ease;
+}
+.terminal-output.visible {
+  opacity: 1;
+  max-height: 200px;
+}
+
+/* Typing cursor */
+.typing-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  background: var(--text-dim);
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+  margin-left: 2px;
+}
+.cursor {
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  background: var(--text-dim);
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+  margin-left: 1px;
 }
 
 /* Section dividers */

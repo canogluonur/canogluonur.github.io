@@ -104,83 +104,73 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateTimestamp, 1000);
   }
 
-  // ─── Terminal Typing ────────────────────────────────────────
-  var terminalCmd = document.getElementById('terminal-cmd');
-  if (terminalCmd) {
-    var commands = [
-      'whoami && cat ~/about.txt',
-      'kubectl get pods -A',
-      'terraform plan',
-      'helm list -A',
-      'curl -s https://canoglu.dev | grep "DevOps"',
-      'systemctl status --full',
-      'docker ps --format "table {{.Names}}"',
-      'git log --oneline -5',
-      'ansible-playbook site.yml --check',
-      'kubectl exec -it $(whoami) -- /bin/bash'
-    ];
-    var cmdIndex = 0;
-    var charIndex = 0;
-    var isDeleting = false;
-    var typeSpeed = 35;
+  // ─── Terminal Typing Sequence ───────────────────────────────
+  var terminal = document.getElementById('terminal');
+  if (terminal) {
+    var lines = terminal.querySelectorAll('.terminal-line');
+    var outputs = terminal.querySelectorAll('.terminal-output');
+    var typeSpeed = 40;
+    var pauseAfterCmd = 300;
+    var pauseAfterOutput = 200;
 
-    function typeLoop() {
-      var current = commands[cmdIndex];
-      if (!isDeleting) {
-        terminalCmd.textContent = current.substring(0, charIndex + 1);
-        charIndex++;
-        if (charIndex === current.length) {
-          setTimeout(function() { isDeleting = true; typeLoop(); }, 2000);
-          return;
+    function typeText(element, text, callback) {
+      var i = 0;
+      element.textContent = '';
+      element.appendChild(document.createElement('span'));
+      var span = element.querySelector('span');
+      var cursorSpan = document.createElement('span');
+      cursorSpan.className = 'typing-cursor';
+      element.appendChild(cursorSpan);
+
+      function type() {
+        if (i < text.length) {
+          span.textContent += text.charAt(i);
+          i++;
+          setTimeout(type, typeSpeed + Math.random() * 30);
+        } else {
+          if (cursorSpan.parentNode) cursorSpan.remove();
+          if (callback) callback();
         }
-        setTimeout(typeLoop, typeSpeed + Math.random() * 25);
-      } else {
-        terminalCmd.textContent = current.substring(0, charIndex);
-        charIndex--;
-        if (charIndex < 0) {
-          isDeleting = false;
-          charIndex = 0;
-          cmdIndex = (cmdIndex + 1) % commands.length;
-          setTimeout(typeLoop, 300);
-          return;
-        }
-        setTimeout(typeLoop, typeSpeed / 2);
       }
+      type();
     }
-    setTimeout(typeLoop, 500);
-  }
 
-  // ─── Quote Rotator ──────────────────────────────────────────
-  var quoteText = document.getElementById('quote-text');
-  var quoteAuthor = document.getElementById('quote-author');
-  if (quoteText && quoteAuthor) {
-    var quotes = [
-      { text: 'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.', author: 'Martin Fowler' },
-      { text: 'DevOps is not a goal, but a never-ending process of continual improvement.', author: 'Jez Humble' },
-      { text: 'Containers are not about virtualizing machines; they are about virtualizing the operating system.', author: 'Unknown' },
-      { text: 'Automation is not about replacing humans; it is about freeing them to do what they do best.', author: 'Gene Kim' },
-      { text: 'The best way to build resilient systems is to embrace failure, not to prevent it.', author: 'Unknown' },
-      { text: 'Kubernetes is not a platform; it is a platform for building platforms.', author: 'Kelsey Hightower' },
-      { text: 'Infrastructure as Code is not a choice; it is a requirement.', author: 'Kief Morris' },
-      { text: 'Observability is about asking arbitrary questions without having to deploy new code.', author: 'Charity Majors' },
-      { text: 'If you can\'t measure it, you can\'t improve it.', author: 'Peter Drucker' },
-      { text: 'The cloud is just someone else\'s computer.', author: 'Unknown' }
-    ];
-    var qIndex = 0;
-    quoteText.textContent = quotes[0].text;
-    quoteAuthor.textContent = '— ' + quotes[0].author;
+    function runSequence(index) {
+      if (index >= lines.length) return;
+      var line = lines[index];
+      var cmd = line.getAttribute('data-cmd');
+      var promptOnly = line.getAttribute('data-prompt-only') === 'true';
 
-    setInterval(function() {
-      qIndex = (qIndex + 1) % quotes.length;
-      quoteText.style.opacity = '0';
-      quoteAuthor.style.opacity = '0';
-      setTimeout(function() {
-        quoteText.textContent = quotes[qIndex].text;
-        quoteAuthor.textContent = '— ' + quotes[qIndex].author;
-        quoteText.style.opacity = '1';
-        quoteAuthor.style.opacity = '1';
-      }, 300);
-    }, 8000);
+      line.innerHTML = '';
+      var promptSpan = document.createElement('span');
+      promptSpan.className = 'prompt';
+      promptSpan.textContent = '$';
+      line.appendChild(promptSpan);
+
+      var cmdSpan = document.createElement('span');
+      cmdSpan.className = 'cmd';
+      line.appendChild(cmdSpan);
+
+      if (promptOnly) {
+        cmdSpan.innerHTML = '_<span class="cursor"></span>';
+        if (index === lines.length - 1) return;
+        runSequence(index + 1);
+        return;
+      }
+
+      typeText(cmdSpan, cmd, function() {
+        setTimeout(function() {
+          if (outputs[index]) {
+            outputs[index].classList.add('visible');
+          }
+          setTimeout(function() {
+            runSequence(index + 1);
+          }, pauseAfterOutput);
+        }, pauseAfterCmd);
+      });
+    }
+
+    runSequence(0);
   }
 
   // ─── Metrics Counter ────────────────────────────────────────
