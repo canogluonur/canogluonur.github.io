@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
     '/home/onur/canogluonur.github.io': {
       'about.txt': 'Cloud-native infrastructure architect. Building scalable, resilient systems with Kubernetes, GitOps, and observability.',
       'skills.txt': 'Kubernetes, Docker, Helm, ArgoCD, Terraform, Ansible, AWS, Azure, Prometheus, Grafana, Elasticsearch, Kibana, Kafka, RabbitMQ, PostgreSQL, MongoDB, Redis, Linux, Vault, GitLab CI, GitHub Actions',
-      'contact.md': 'GitHub: onurcanoglu | LinkedIn: onurcanoglu | Medium: @onurcanoglu | Email: onur@canoglu.dev',
+      'contact.md': 'GitHub: onurcanoglu | LinkedIn: onurcanoglu | Medium: @onurcanoglu | Email: onurcanoglu7@gmail.com',
       'roles/': null,
       'projects/': null,
       'certs/': null
@@ -501,7 +501,7 @@ document.addEventListener('DOMContentLoaded', function() {
           '  <div><span style="color:var(--text-dim);">GitHub:</span> <a href="https://github.com/onurcanoglu" target="_blank" style="color:var(--cyan);text-decoration:none;border-bottom:1px dashed var(--cyan);">onurcanoglu</a></div>',
           '  <div><span style="color:var(--text-dim);">LinkedIn:</span> <a href="https://linkedin.com/in/onurcanoglu" target="_blank" style="color:var(--cyan);text-decoration:none;border-bottom:1px dashed var(--cyan);">onurcanoglu</a></div>',
           '  <div><span style="color:var(--text-dim);">Medium:</span> <a href="https://medium.com/@onurcanoglu" target="_blank" style="color:var(--cyan);text-decoration:none;border-bottom:1px dashed var(--cyan);">@onurcanoglu</a></div>',
-          '  <div><span style="color:var(--text-dim);">Email:</span> <a href="mailto:onur@canoglu.dev" style="color:var(--cyan);text-decoration:none;border-bottom:1px dashed var(--cyan);">onur@canoglu.dev</a></div>',
+          '  <div><span style="color:var(--text-dim);">Email:</span> <a href="mailto:onurcanoglu7@gmail.com" style="color:var(--cyan);text-decoration:none;border-bottom:1px dashed var(--cyan);">onurcanoglu7@gmail.com</a></div>',
           '</div>'
         ].join('\n');
 
