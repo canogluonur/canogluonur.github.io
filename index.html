@@ -278,6 +278,44 @@ title: Home
     </div>
   </section>
 
+  <section class="content-section" id="blog">
+    <div class="section-divider">
+      <span class="section-divider-label">Blog</span>
+      <a href="/blog" class="section-view-all">View All &rarr;</a>
+    </div>
+    <div class="dashboard-grid">
+      <div class="card card-span-12">
+        <div class="card-content">
+          {% if site.posts.size > 0 %}
+          <ul class="blog-list">
+            {% for post in site.posts limit:3 %}
+            <li class="blog-item">
+              {% if post.image %}
+              <a href="{{ post.medium_url | default: post.url | relative_url }}" target="{% if post.medium_url %}_blank{% endif %}" rel="{% if post.medium_url %}noopener{% endif %}" style="flex-shrink:0;">
+                <img src="{{ post.image }}" alt="" style="width:100px;height:auto;border-radius:var(--radius);border:1px solid var(--border);" loading="lazy">
+              </a>
+              {% endif %}
+              <div>
+                <a href="{{ post.medium_url | default: post.url | relative_url }}" target="{% if post.medium_url %}_blank{% endif %}" rel="{% if post.medium_url %}noopener{% endif %}">{{ post.title }}</a>
+                <div class="blog-date">
+                  {{ post.date | date: "%b %d, %Y" }}
+                  {% if post.medium_url %}&middot; <span style="color:var(--cyan);font-size:0.68rem;">Medium →</span>{% endif %}
+                </div>
+                {% if post.excerpt %}
+                <p class="blog-excerpt">{{ post.excerpt | strip_html | truncate: 120 }}</p>
+                {% endif %}
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p style="color:var(--text-dim);font-family:var(--font);font-size:0.85rem;">No posts yet. Coming soon!</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="content-section" id="social">
     <div class="section-divider">
       <span class="section-divider-label">Contact</span>
