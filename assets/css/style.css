@@ -891,6 +891,21 @@ body {
 /* Selection */
 ::selection { background: rgba(121, 192, 255, 0.3); color: var(--text-bright); }
 
+/* Scroll animations */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-in-delay-1 { transition-delay: 0.1s; }
+.fade-in-delay-2 { transition-delay: 0.2s; }
+.fade-in-delay-3 { transition-delay: 0.3s; }
+.fade-in-delay-4 { transition-delay: 0.4s; }
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
@@ -929,18 +944,71 @@ body.light .terminal-dots span:nth-child(2) { background: #fd7e14; }
 body.light .terminal-dots span:nth-child(3) { background: #198754; }
 
 /* Responsive */
+@media (max-width: 900px) {
+  .card-span-7, .card-span-5 { grid-column: span 12; }
+}
 @media (max-width: 768px) {
   .hero-section { flex-direction: column; align-items: center; text-align: center; gap: 16px; }
-  .hero-name-row { justify-content: center; }
+  .hero-name-row { flex-direction: column; align-items: center; gap: 10px; }
   .hero-bio { max-width: 100%; }
   .hero-nav { display: none; }
   .tag-row { justify-content: center; }
-  .dashboard-grid { grid-template-columns: 1fr; }
+  .dashboard-grid { grid-template-columns: 1fr; gap: 10px; }
   .card-span-12, .card-span-8, .card-span-7, .card-span-5,
   .card-span-6, .card-span-4, .card-span-3 { grid-column: span 1; }
   .page-wrapper { padding: 0 12px; }
   .hero-name { font-size: 1.3rem; }
-  .metrics-row { gap: 20px; justify-content: center; }
+  .hero-avatar-frame { width: 72px; height: 72px; }
+  .metrics-row { gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .metric-item { min-width: 80px; }
   .terminal-screen { min-height: 100px; padding: 14px 16px 18px; }
+  .window-body { padding: 14px 16px; min-height: 160px; }
+  .top-bar { flex-direction: column; gap: 8px; align-items: flex-start; }
+  .top-bar-left { width: 100%; justify-content: center; }
+  .top-bar-right { width: 100%; text-align: center; justify-content: center; display: flex; }
+  .skills-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .skill-card { padding: 8px; }
+  .skill-card img, .skill-card span { display: block; }
+  .timeline-card { padding: 6px 0; }
+  .timeline-content h3 { font-size: 0.85rem; }
+  .timeline-content .meta { font-size: 0.75rem; }
+  .timeline-content .date { font-size: 0.68rem; }
+  .social-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .certs-row { gap: 8px; }
+  .cert-item { width: 60px; }
+  .cert-item img { width: 36px; }
   .theme-toggle { bottom: 16px; right: 16px; width: 36px; height: 36px; font-size: 0.9rem; }
+  .blog-item { flex-direction: column; gap: 8px; }
+  .blog-item img { width: 100% !important; max-width: 200px; }
+  .section-divider { flex-direction: column; align-items: flex-start; gap: 4px; }
+}
+@media (max-width: 480px) {
+  .hero-name { font-size: 1.1rem; }
+  .hero-bio { font-size: 0.78rem; }
+  .page-wrapper { padding: 0 8px; }
+  .window-body { padding: 10px 12px; min-height: 120px; font-size: 0.75rem; }
+  .skills-grid { grid-template-columns: repeat(2, 1fr); gap: 5px; }
+  .skill-card { padding: 6px; font-size: 0.68rem; }
+  .metrics-row { gap: 12px; }
+  .metric-value { font-size: 1.3rem; }
+  .metric-label { font-size: 0.62rem; }
+  .social-grid { grid-template-columns: 1fr; }
+  .social-link { padding: 8px 12px; font-size: 0.78rem; }
+  .top-bar-label { font-size: 0.68rem; }
+  .tag-row .tag { font-size: 0.62rem; padding: 2px 8px; }
+  .section-divider-label { font-size: 0.72rem; }
+  .term-input-row .prompt { font-size: 0.75rem; }
+  #term-input { font-size: 0.75rem; }
+  .term-hint { display: none !important; }
+  .certs-row { flex-wrap: wrap; justify-content: center; }
+  .badges-row { flex-wrap: wrap; justify-content: center; }
+  .badges-row .badge { font-size: 0.62rem; }
+  .card { border-radius: 6px; }
+  .window-chrome { padding: 6px 10px; }
+  .window-dots { gap: 5px; }
+  .wdot { width: 9px; height: 9px; }
+  .window-title { font-size: 0.6rem; }
+  .hero-avatar-frame { width: 60px; height: 60px; }
+  .hero-avatar-block .hero-status { bottom: 2px; right: 2px; width: 14px; height: 14px; }
+  .top-bar { margin-bottom: 20px; }
 }

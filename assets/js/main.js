@@ -380,6 +380,20 @@ document.addEventListener('DOMContentLoaded', function() {
     return days + 'd ' + hours + 'h ' + mins + 'm';
   }
 
+  function randomMatrixChar() {
+    var chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF';
+    return chars[Math.floor(Math.random() * chars.length)];
+  }
+  function randomMatrixLine() {
+    var len = Math.floor(Math.random() * 30 + 20);
+    var line = '';
+    for (var mi = 0; mi < len; mi++) {
+      if (Math.random() < 0.1) line += ' ';
+      else line += randomMatrixChar();
+    }
+    return line;
+  }
+
   function getOutputForCommand(input) {
     var parts = input.trim().split(/\s+/);
     var cmd = parts[0].toLowerCase();
@@ -402,6 +416,7 @@ document.addEventListener('DOMContentLoaded', function() {
           '  <span style="color:var(--cyan);">cat</span>            Read a file',
           '  <span style="color:var(--cyan);">education</span>      Show education &amp; certs',
           '  <span style="color:var(--cyan);">contact</span>        Show contact info',
+          '  <span style="color:var(--cyan);">contact</span>        Show contact info',
           '  <span style="color:var(--cyan);">uptime</span>         Show system uptime',
           '  <span style="color:var(--cyan);">uname</span>          Print system information',
           '  <span style="color:var(--cyan);">date</span>           Show current date/time',
@@ -420,7 +435,10 @@ document.addEventListener('DOMContentLoaded', function() {
           '  <span style="color:var(--cyan);">who</span>            Who is logged in',
           '  <span style="color:var(--cyan);">sudo</span>           Try root access',
           '  <span style="color:var(--cyan);">exit</span>           Nice try',
-          '  <span style="color:var(--cyan);">vim</span> / <span style="color:var(--cyan);">emacs</span>   Easter eggs'
+          '  <span style="color:var(--cyan);">vim</span> / <span style="color:var(--cyan);">emacs</span>   Easter eggs',
+          '  <span style="color:var(--cyan);">figlet</span>         ASCII art text',
+          '  <span style="color:var(--cyan);">lolcat</span>         Rainbow text',
+          '  <span style="color:var(--cyan);">cmatrix</span>        Matrix rain'
         ].join('\n');
 
       case 'about':
@@ -602,6 +620,46 @@ document.addEventListener('DOMContentLoaded', function() {
         ];
         return '  ' + quotes[Math.floor(Math.random() * quotes.length)];
 
+      case 'figlet': {
+        var figText = args.join(' ') || 'onur';
+        // Simple block-style ASCII art
+        var art = [
+          '  ███████  ██████  ███    ██ ██    ██ ██████  ',
+          '  ██      ██    ██ ████   ██ ██    ██ ██   ██ ',
+          '  █████   ██    ██ ██ ██  ██ ██    ██ ██████  ',
+          '  ██      ██    ██ ██ ██  ██ ██    ██ ██   ██ ',
+          '  ██       ██████  ██   ████  ██████  ██   ██ '
+        ];
+        return '<pre style="color:var(--green);font-size:0.5rem;line-height:1.15;margin:4px 0;">' + art.join('\n') + '</pre><div style="color:var(--text-dim);font-size:0.7rem;">  ' + figText + '</div>';
+      }
+
+      case 'lolcat':
+        if (args.length === 0) return '  lolcat: missing operand';
+        var lolText = args.join(' ');
+        var rainbow = '';
+        var colors = ['#ff6b6b', '#ffa500', '#ffd93d', '#6bcb77', '#4d96ff', '#9b59b6'];
+        for (var li = 0; li < lolText.length; li++) {
+          var c = colors[li % colors.length];
+          rainbow += '<span style="color:' + c + ';">' + lolText[li] + '</span>';
+        }
+        return '<div style="font-size:0.82rem;padding:2px 0;">' + rainbow + '</div>';
+
+      case 'cmatrix':
+        if (args[0] === 'stop' || args[0] === 'exit' || args[0] === 'q') return '';
+        return [
+          '<div style="font-size:0.5rem;line-height:1.1;color:var(--green);padding:4px 0;font-family:monospace;max-height:120px;overflow:hidden;">',
+          '  ' + randomMatrixLine(),
+          '  ' + randomMatrixLine(),
+          '  ' + randomMatrixLine(),
+          '  ' + randomMatrixLine(),
+          '  ' + randomMatrixLine(),
+          '  ' + randomMatrixLine(),
+          '  ' + randomMatrixLine(),
+          '  ' + randomMatrixLine(),
+          '</div>',
+          '<div style="color:var(--text-dim);font-size:0.65rem;">Type <span style="color:var(--cyan);">cmatrix stop</span> to stop</div>'
+        ].join('\n');
+
       case 'curl':
         if (args[0] && args[0].match(/canoglu\.dev|localhost|onurcanoglu/)) {
           return '  HTTP/1.1 200 OK\n  Content-Type: text/html\n  Server: GitHub Pages\n  X-Powered-By: Jekyll\n\n  <html><body><h1>Welcome to Onur Cano\u011flu\'s site!</h1></body></html>';
@@ -740,6 +798,20 @@ document.addEventListener('DOMContentLoaded', function() {
       localStorage.setItem('theme', isLight ? 'light' : 'dark');
       isLight = isLight;
     });
+  }
+
+  // ─── Scroll Animations ─────────────────────────────────────
+  var fadeEls = document.querySelectorAll('.fade-in');
+  if (fadeEls.length > 0 && 'IntersectionObserver' in window) {
+    var fadeObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          fadeObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    fadeEls.forEach(function(el) { fadeObs.observe(el); });
   }
 
   // ─── Active nav on scroll ──────────────────────────────────
