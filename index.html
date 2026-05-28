@@ -3,58 +3,49 @@ layout: default
 title: Home
 ---
 
-<section class="terminal">
+<section id="about" class="hero">
   <div class="container">
-    <div class="terminal-body">
-      <div class="terminal-line">
-        <span class="terminal-prompt">onur@devops:~$</span>
-        <span>whoami</span>
+    <div class="window">
+      <div class="window-bar">
+        <div class="window-dots">
+          <span class="window-dot red"></span>
+          <span class="window-dot yellow"></span>
+          <span class="window-dot green"></span>
+        </div>
+        <span class="window-title">onur@devops — ~/profile</span>
       </div>
-      <h1 class="terminal-name">Onur Canoğlu</h1>
-      <p class="terminal-title">DevOps Engineer</p>
-      <p class="terminal-desc">
-        Cloud-native infrastructure architect. Building scalable, resilient systems
-        with Kubernetes, GitOps, and observability. KCD Istanbul Organizer &amp; KubeSphere Ambassador.
-      </p>
-      <div class="terminal-line">
-        <span class="terminal-prompt">onur@devops:~$</span>
-        <span>cat roles.badges</span>
-      </div>
-      <div class="badges">
-        <span class="badge green">KCD Istanbul Organizer</span>
-        <span class="badge green">KubeSphere Ambassador 2023</span>
-        <span class="badge">CKA</span>
-        <span class="badge">KCNA</span>
-      </div>
-      <div class="terminal-line" style="margin-top:20px;">
-        <span class="terminal-prompt">onur@devops:~$</span>
-        <span>_</span>
-        <span class="terminal-cursor"></span>
+      <div class="window-body" id="terminal">
+        <div class="terminal-line" data-cmd="whoami"></div>
+        <div class="terminal-output">
+          <h1 class="hero-name">Onur Canoğlu</h1>
+          <p class="hero-title">DevOps Engineer</p>
+        </div>
+        <div class="terminal-line" data-cmd="cat ~/about.txt"></div>
+        <div class="terminal-output">
+          <p class="hero-desc">
+            Cloud-native infrastructure architect. Building scalable, resilient systems
+            with Kubernetes, GitOps, and observability.
+          </p>
+        </div>
+        <div class="terminal-line" data-cmd="ls -la roles/"></div>
+        <div class="terminal-output">
+          <div class="badges">
+            <span class="badge">CKA</span>
+            <span class="badge">KCNA</span>
+          </div>
+        </div>
+        <div class="terminal-line" data-cmd="" data-prompt-only="true" style="margin-top:14px;"></div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="about" class="section">
-  <div class="container">
-    <div class="section-header">
-      <span class="hash">#</span>
-      <h2>About</h2>
-      <span class="line"></span>
-    </div>
-    <p style="color:var(--text-dim);font-size:0.9rem;max-width:620px;line-height:1.8;">
-      Passionate DevOps Engineer with expertise in cloud-native technologies and container orchestration.
-      I specialize in designing and managing production-grade Kubernetes clusters, implementing GitOps workflows
-      with ArgoCD, and building comprehensive observability stacks with Prometheus, Grafana, Loki, and Tempo.
-      Active community contributor and technical writer.
-    </p>
-  </div>
-</section>
+<p class="sep">━━━</p>
 
 <section id="experience" class="section">
   <div class="container">
     <div class="section-header">
-      <span class="hash">#</span>
+      <span class="prompt">#</span>
       <h2>Experience</h2>
       <span class="line"></span>
     </div>
@@ -63,7 +54,7 @@ title: Home
         <div class="timeline-dot"></div>
         <div class="timeline-content">
           <h3>DevOps Engineer</h3>
-          <p class="meta">Tatilbudur</p>
+          <p class="meta"><a href="https://tatilbudur.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dashed var(--cyan);">Tatilbudur</a></p>
           <p class="date">2024 — Present</p>
           <p>
             Design and manage production-grade Kubernetes clusters. Implement CI/CD pipelines and GitOps workflows
@@ -76,10 +67,12 @@ title: Home
   </div>
 </section>
 
+<p class="sep">━━━</p>
+
 <section id="skills" class="section">
   <div class="container">
     <div class="section-header">
-      <span class="hash">#</span>
+      <span class="prompt">#</span>
       <h2>Skills</h2>
       <span class="line"></span>
     </div>
@@ -172,10 +165,12 @@ title: Home
   </div>
 </section>
 
+<p class="sep">━━━</p>
+
 <section id="education" class="section">
   <div class="container">
     <div class="section-header">
-      <span class="hash">#</span>
+      <span class="prompt">#</span>
       <h2>Education &amp; Certs</h2>
       <span class="line"></span>
     </div>
@@ -193,51 +188,19 @@ title: Home
         <span>KCNA</span>
       </div>
     </div>
+    <div class="badges" style="margin-top:14px;">
+      <span class="badge green">KCD Istanbul Organizer</span>
+      <span class="badge green">KubeSphere Ambassador 2023</span>
+    </div>
   </div>
 </section>
 
-<section id="blog" class="section">
-  <div class="container">
-    <div class="section-header">
-      <span class="hash">#</span>
-      <h2>Blog</h2>
-      <span class="line"></span>
-    </div>
-    {% if site.posts.size > 0 %}
-    <ul class="blog-list">
-      {% for post in site.posts limit:3 %}
-      <li class="blog-item" style="display:flex;gap:14px;align-items:flex-start;">
-        {% if post.image %}
-        <a href="{{ post.medium_url | default: post.url | relative_url }}" target="{% if post.medium_url %}_blank{% endif %}" rel="{% if post.medium_url %}noopener{% endif %}" style="flex-shrink:0;">
-          <img src="{{ post.image }}" alt="" style="width:100px;height:auto;border-radius:var(--radius);border:1px solid var(--border);" loading="lazy">
-        </a>
-        {% endif %}
-        <div>
-          <a href="{{ post.medium_url | default: post.url | relative_url }}" target="{% if post.medium_url %}_blank{% endif %}" rel="{% if post.medium_url %}noopener{% endif %}">{{ post.title }}</a>
-          <div class="blog-date">
-            {{ post.date | date: "%b %d, %Y" }}
-            {% if post.medium_url %}&middot; <span style="color:var(--accent);font-size:0.75rem;">Medium →</span>{% endif %}
-          </div>
-          {% if post.excerpt %}
-          <p class="blog-excerpt">{{ post.excerpt | strip_html | truncate: 120 }}</p>
-          {% endif %}
-        </div>
-      </li>
-      {% endfor %}
-    </ul>
-    <p style="text-align:center;margin-top:20px;">
-      <a href="{{ '/blog' | relative_url }}" style="color:var(--accent);text-decoration:none;font-weight:500;font-size:0.9rem;">View all posts &rarr;</a>
-    </p>
-    {% else %}
-    <p style="color:var(--text-muted);font-family:var(--mono);font-size:0.85rem;">Coming soon...</p>
-    {% endif %}
-  </div>
-</section>
+<p class="sep">━━━</p>
 
 <section id="contact" class="section">
   <div class="container">
     <div class="section-header">
-      <span class="hash">#</span>
+      <span class="prompt">#</span>
       <h2>Contact</h2>
       <span class="line"></span>
     </div>
