@@ -188,6 +188,13 @@ document.addEventListener('DOMContentLoaded', function() {
     cmdBuffer = '';
     cmdHistory = [];
     histIdx = 0;
+
+    var term = document.getElementById('terminal');
+    if (term) {
+      term.addEventListener('keydown', handleTerminalKey);
+      term.addEventListener('click', function() { term.focus(); });
+      term.focus();
+    }
     document.addEventListener('keydown', handleTerminalKey);
 
     var promptLine = document.querySelector('.terminal-line[data-prompt-only="true"]');
@@ -198,13 +205,29 @@ document.addEventListener('DOMContentLoaded', function() {
         if (cs) cs.innerHTML = '_<span class="cursor"></span>';
       }
     }
+
+    // Clicking anywhere on the page refocuses terminal (unless on a link/button/input)
+    document.addEventListener('click', function(e) {
+      if (!interactiveActive) return;
+      var tag = e.target.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || tag === 'BUTTON' || tag === 'A') return;
+      if (e.target.isContentEditable) return;
+      var term = document.getElementById('terminal');
+      if (term && document.activeElement !== term) term.focus();
+    });
+  }
+
+  function refocusTerminal() {
+    var term = document.getElementById('terminal');
+    if (term && document.activeElement !== term) term.focus();
   }
 
   function handleTerminalKey(e) {
     if (!interactiveActive) return;
-    var tag = e.target.tagName;
-    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || tag === 'BUTTON' || tag === 'A') return;
-    if (e.target.isContentEditable) return;
+
+    // Only intercept when terminal (or body) is the active element
+    var active = document.activeElement;
+    if (active && active.id !== 'terminal' && active !== document.body && active.tagName !== 'BODY') return;
 
     var promptLine = document.querySelector('.terminal-line[data-prompt-only="true"]');
     if (!promptLine) return;
@@ -225,6 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       cmdBuffer = '';
       createNewPrompt();
+      refocusTerminal();
     } else if (e.key === 'Backspace') {
       e.preventDefault();
       cmdBuffer = cmdBuffer.slice(0, -1);
@@ -250,6 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else if (e.key === 'l' && e.ctrlKey) {
       e.preventDefault();
       clearTerminal();
+      refocusTerminal();
     } else if (e.key === 'u' && e.ctrlKey) {
       e.preventDefault();
       cmdBuffer = '';

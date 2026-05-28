@@ -371,6 +371,10 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  outline: none;
+}
+.window-body:focus {
+  outline: none;
 }
 
 /* Terminal lines inside window */
