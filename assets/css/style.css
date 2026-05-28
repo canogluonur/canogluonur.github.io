@@ -482,37 +482,19 @@ body {
   color: var(--blue);
   border: 1px solid rgba(121, 192, 255, 0.12);
 }
-.window-body .roles-mini {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin: 4px 0;
-}
-.window-body .role-mini-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.78rem;
-  font-family: var(--font-mono);
-  padding: 3px 6px;
-  border-radius: 4px;
-  background: rgba(121, 192, 255, 0.04);
-  transition: background 0.2s;
-}
-.window-body .role-mini-item:hover {
-  background: rgba(121, 192, 255, 0.1);
-}
-.window-body .role-mini-icon {
-  color: var(--green);
-  font-size: 0.6rem;
-}
-.window-body .role-mini-title {
-  color: var(--text);
-  font-weight: 500;
-}
-.window-body .role-mini-company {
+.window-body .roles-hint {
+  font-size: 0.82rem;
   color: var(--text-dim);
-  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  margin: 4px 0;
+  line-height: 1.6;
+}
+.window-body .roles-hint-cmd {
+  color: var(--green);
+  font-weight: 600;
+  background: rgba(87, 191, 87, 0.08);
+  padding: 1px 6px;
+  border-radius: 3px;
 }
 
 /* Terminal output fade-in */
