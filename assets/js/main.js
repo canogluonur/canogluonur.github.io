@@ -183,10 +183,10 @@ document.addEventListener('DOMContentLoaded', function() {
   var deployDate = new Date();
 
   function enableInteractiveMode() {
+    if (interactiveActive) return;
     interactiveActive = true;
     cmdHistory = [];
 
-    // Hide the last prompt-only line, show the real input row
     var promptLine = document.querySelector('.terminal-line[data-prompt-only="true"]');
     if (promptLine) promptLine.style.display = 'none';
 
@@ -195,11 +195,11 @@ document.addEventListener('DOMContentLoaded', function() {
     var hint = document.getElementById('term-hint');
     if (row) row.style.display = 'flex';
     if (input) {
-      input.focus();
+      input.removeEventListener('keydown', handleTerminalInput);
       input.addEventListener('keydown', handleTerminalInput);
+      input.focus();
     }
 
-    // Click anywhere on terminal re-focuses the input
     var term = document.getElementById('terminal');
     if (term) {
       term.addEventListener('click', function() {
@@ -208,7 +208,6 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
 
-    // Auto-hide hint on first keystroke
     if (input && hint) {
       input.addEventListener('input', function() {
         var h = document.getElementById('term-hint');
@@ -217,10 +216,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+  var _processing = false;
+
   function handleTerminalInput(e) {
-    if (!interactiveActive) return;
+    if (!interactiveActive || _processing) return;
     var input = e.target;
     if (e.key === 'Enter') {
+      _processing = true;
       e.preventDefault();
       var cmd = input.value.trim();
       input.value = '';
@@ -228,14 +230,12 @@ document.addEventListener('DOMContentLoaded', function() {
       if (cmd) {
         cmdHistory.push(cmd);
         histIdx = cmdHistory.length;
-        // Show the command line
         showCommandLine(cmd);
-        // Show output
         showCommandOutput(cmd);
       }
 
-      // Re-focus input
       input.focus();
+      _processing = false;
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (histIdx > 0) {
