@@ -5,23 +5,35 @@ title: Blog
 
 <section class="section">
   <div class="container">
-    <h2 class="section-title">Blog</h2>
+    <div class="section-header">
+      <span class="hash">#</span>
+      <h2>Blog</h2>
+      <span class="line"></span>
+    </div>
     {% if site.posts.size > 0 %}
     <ul class="blog-list">
       {% for post in site.posts %}
-      <li class="blog-item">
-        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-        <div class="blog-date">
-          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y" }}</time>
-        </div>
-        {% if post.excerpt %}
-        <p class="blog-excerpt">{{ post.excerpt | strip_html | truncate: 200 }}</p>
+      <li class="blog-item" style="display:flex;gap:16px;align-items:flex-start;">
+        {% if post.image %}
+        <a href="{{ post.medium_url | default: post.url | relative_url }}" target="{% if post.medium_url %}_blank{% endif %}" rel="{% if post.medium_url %}noopener{% endif %}" style="flex-shrink:0;">
+          <img src="{{ post.image }}" alt="" style="width:140px;height:auto;border-radius:var(--radius);border:1px solid var(--border);" loading="lazy">
+        </a>
         {% endif %}
+        <div>
+          <a href="{{ post.medium_url | default: post.url | relative_url }}" target="{% if post.medium_url %}_blank{% endif %}" rel="{% if post.medium_url %}noopener{% endif %}">{{ post.title }}</a>
+          <div class="blog-date">
+            {{ post.date | date: "%b %d, %Y" }}
+            {% if post.medium_url %}&middot; <span style="color:var(--accent);font-size:0.75rem;">Medium →</span>{% endif %}
+          </div>
+          {% if post.excerpt %}
+          <p class="blog-excerpt">{{ post.excerpt | strip_html | truncate: 200 }}</p>
+          {% endif %}
+        </div>
       </li>
       {% endfor %}
     </ul>
     {% else %}
-    <p style="text-align:center;color:var(--text-muted);">No posts yet. Coming soon!</p>
+    <p style="color:var(--text-muted);font-family:var(--mono);font-size:0.85rem;">No posts yet. Coming soon!</p>
     {% endif %}
   </div>
 </section>
