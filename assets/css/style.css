@@ -659,8 +659,8 @@ body {
   gap: 10px;
 }
 .cert-item img {
-  width: 52px;
-  height: 52px;
+  width: 72px;
+  height: 72px;
   object-fit: contain;
 }
 .cert-item span {
