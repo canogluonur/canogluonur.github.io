@@ -3,10 +3,12 @@ layout: default
 title: Page Not Found
 ---
 
-<section class="section" style="text-align:center;min-height:50vh;display:flex;align-items:center;justify-content:center;">
-  <div class="container">
-    <h1 style="font-size:5rem;font-weight:700;color:var(--accent);margin-bottom:8px;">404</h1>
-    <p style="color:var(--text-secondary);font-size:1.1rem;margin-bottom:24px;">Page not found</p>
-    <a href="{{ '/' | relative_url }}" class="contact-link" style="display:inline-flex;">Go Home</a>
+<div class="page-wrapper">
+  <div class="dashboard-grid" style="margin-top:60px;">
+    <div class="card card-span-12" style="text-align:center;padding:60px 24px;">
+      <h1 style="font-size:4rem;font-weight:700;color:var(--accent);margin-bottom:8px;">404</h1>
+      <p style="color:var(--text-dim);font-size:1rem;margin-bottom:20px;">Page not found</p>
+      <a href="{{ '/' | relative_url }}" class="social-link" style="display:inline-flex;">Go Home</a>
+    </div>
   </div>
-</section>
+</div>
