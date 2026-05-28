@@ -56,7 +56,7 @@ title: Home
         </div>
         <span class="window-title">onur@devops — ~/profile</span>
       </div>
-      <div class="window-body" id="terminal" tabindex="-1">
+      <div class="window-body" id="terminal">
         <div class="terminal-line" data-cmd="whoami"></div>
         <div class="terminal-output">
           <h1 class="hero-name">Onur Canoğlu</h1>
@@ -77,6 +77,11 @@ title: Home
           </div>
         </div>
         <div class="terminal-line" data-cmd="" data-prompt-only="true" style="margin-top:14px;"></div>
+        <div class="term-input-row" id="term-input-row" style="display:none;">
+          <span class="prompt">$</span>
+          <input type="text" id="term-input" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off">
+          <span class="term-hint" id="term-hint">Type help for commands</span>
+        </div>
       </div>
     </div>
   </div>

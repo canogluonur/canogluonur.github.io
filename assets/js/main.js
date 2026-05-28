@@ -178,111 +178,96 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // ─── Interactive Terminal ───────────────────────────────────
   var interactiveActive = false;
-  var cmdBuffer = '';
   var cmdHistory = [];
   var histIdx = 0;
   var deployDate = new Date();
 
   function enableInteractiveMode() {
     interactiveActive = true;
-    cmdBuffer = '';
     cmdHistory = [];
-    histIdx = 0;
 
+    // Hide the last prompt-only line, show the real input row
+    var promptLine = document.querySelector('.terminal-line[data-prompt-only="true"]');
+    if (promptLine) promptLine.style.display = 'none';
+
+    var row = document.getElementById('term-input-row');
+    var input = document.getElementById('term-input');
+    var hint = document.getElementById('term-hint');
+    if (row) row.style.display = 'flex';
+    if (input) {
+      input.focus();
+      input.addEventListener('keydown', handleTerminalInput);
+    }
+
+    // Click anywhere on terminal re-focuses the input
     var term = document.getElementById('terminal');
     if (term) {
-      term.addEventListener('keydown', handleTerminalKey);
-      term.addEventListener('click', function() { term.focus(); });
-      term.focus();
-    }
-    document.addEventListener('keydown', handleTerminalKey);
-
-    var promptLine = document.querySelector('.terminal-line[data-prompt-only="true"]');
-    if (promptLine) {
-      var c = promptLine.querySelector('.cursor');
-      if (!c) {
-        var cs = promptLine.querySelector('.cmd');
-        if (cs) cs.innerHTML = '_<span class="cursor"></span>';
-      }
+      term.addEventListener('click', function() {
+        var inp = document.getElementById('term-input');
+        if (inp) inp.focus();
+      });
     }
 
-    // Clicking anywhere on the page refocuses terminal (unless on a link/button/input)
-    document.addEventListener('click', function(e) {
-      if (!interactiveActive) return;
-      var tag = e.target.tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || tag === 'BUTTON' || tag === 'A') return;
-      if (e.target.isContentEditable) return;
-      var term = document.getElementById('terminal');
-      if (term && document.activeElement !== term) term.focus();
-    });
+    // Auto-hide hint on first keystroke
+    if (input && hint) {
+      input.addEventListener('input', function() {
+        var h = document.getElementById('term-hint');
+        if (h) h.style.display = 'none';
+      }, { once: true });
+    }
   }
 
-  function refocusTerminal() {
-    var term = document.getElementById('terminal');
-    if (term && document.activeElement !== term) term.focus();
-  }
-
-  function handleTerminalKey(e) {
+  function handleTerminalInput(e) {
     if (!interactiveActive) return;
-
-    // Only intercept when terminal (or body) is the active element
-    var active = document.activeElement;
-    if (active && active.id !== 'terminal' && active !== document.body && active.tagName !== 'BODY') return;
-
-    var promptLine = document.querySelector('.terminal-line[data-prompt-only="true"]');
-    if (!promptLine) return;
-    var cmdSpan = promptLine.querySelector('.cmd');
-    if (!cmdSpan) return;
-
+    var input = e.target;
     if (e.key === 'Enter') {
       e.preventDefault();
-      cmdSpan.textContent = cmdBuffer;
-      promptLine.removeAttribute('data-prompt-only');
+      var cmd = input.value.trim();
+      input.value = '';
 
-      var cmd = cmdBuffer.trim();
       if (cmd) {
         cmdHistory.push(cmd);
         histIdx = cmdHistory.length;
+        // Show the command line
+        showCommandLine(cmd);
+        // Show output
         showCommandOutput(cmd);
       }
 
-      cmdBuffer = '';
-      createNewPrompt();
-      refocusTerminal();
-    } else if (e.key === 'Backspace') {
-      e.preventDefault();
-      cmdBuffer = cmdBuffer.slice(0, -1);
-      cmdSpan.innerHTML = cmdBuffer + '_<span class="cursor"></span>';
+      // Re-focus input
+      input.focus();
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (histIdx > 0) {
         histIdx--;
-        cmdBuffer = cmdHistory[histIdx];
-        cmdSpan.innerHTML = cmdBuffer + '_<span class="cursor"></span>';
+        input.value = cmdHistory[histIdx];
       }
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
       if (histIdx < cmdHistory.length - 1) {
         histIdx++;
-        cmdBuffer = cmdHistory[histIdx];
-        cmdSpan.innerHTML = cmdBuffer + '_<span class="cursor"></span>';
+        input.value = cmdHistory[histIdx];
       } else {
         histIdx = cmdHistory.length;
-        cmdBuffer = '';
-        cmdSpan.innerHTML = '_<span class="cursor"></span>';
+        input.value = '';
       }
     } else if (e.key === 'l' && e.ctrlKey) {
       e.preventDefault();
       clearTerminal();
-      refocusTerminal();
-    } else if (e.key === 'u' && e.ctrlKey) {
-      e.preventDefault();
-      cmdBuffer = '';
-      cmdSpan.innerHTML = '_<span class="cursor"></span>';
-    } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-      e.preventDefault();
-      cmdBuffer += e.key;
-      cmdSpan.innerHTML = cmdBuffer + '_<span class="cursor"></span>';
+    }
+  }
+
+  function showCommandLine(cmd) {
+    var terminal = document.getElementById('terminal');
+    if (!terminal) return;
+    var line = document.createElement('div');
+    line.className = 'terminal-line';
+    line.innerHTML = '<span class="prompt">$</span><span class="cmd">' + cmd + '</span>';
+    var row = document.getElementById('term-input-row');
+    if (row) {
+      terminal.insertBefore(line, row);
+    } else {
+      terminal.appendChild(line);
     }
   }
 
@@ -296,34 +281,33 @@ document.addEventListener('DOMContentLoaded', function() {
     out.style.cssText = 'opacity:1;max-height:none;overflow:visible;margin-bottom:0;';
     out.innerHTML = html;
 
-    var pl = document.querySelector('.terminal-line[data-prompt-only="true"]');
-    if (pl && pl.parentNode === terminal) {
-      terminal.insertBefore(out, pl);
+    var row = document.getElementById('term-input-row');
+    if (row) {
+      terminal.insertBefore(out, row);
     } else {
       terminal.appendChild(out);
     }
   }
 
-  function createNewPrompt() {
-    var terminal = document.getElementById('terminal');
-    if (!terminal) return;
-    var line = document.createElement('div');
-    line.className = 'terminal-line';
-    line.setAttribute('data-prompt-only', 'true');
-    line.innerHTML = '<span class="prompt">$</span><span class="cmd">_<span class="cursor"></span></span>';
-    terminal.appendChild(line);
-    line.scrollIntoView({ block: 'end' });
-  }
-
   function clearTerminal() {
     var terminal = document.getElementById('terminal');
     if (!terminal) return;
-    terminal.innerHTML = '';
-    var line = document.createElement('div');
-    line.className = 'terminal-line';
-    line.setAttribute('data-prompt-only', 'true');
-    line.innerHTML = '<span class="prompt">$</span><span class="cmd">_<span class="cursor"></span></span>';
-    terminal.appendChild(line);
+    var lines = terminal.querySelectorAll('.terminal-line');
+    var outputs = terminal.querySelectorAll('.terminal-output');
+    lines.forEach(function(l) { if (l !== lines[0]) l.remove(); });
+    outputs.forEach(function(o) { o.remove(); });
+    // Also clear command lines inserted by user (but keep the first 3 boot lines)
+    var all = terminal.children;
+    var keep = [];
+    for (var ci = 0; ci < all.length; ci++) {
+      var el = all[ci];
+      if (el.classList.contains('terminal-line') || el.classList.contains('terminal-output')) {
+        if (ci < 7) keep.push(el); // first 7 elements are boot sequence
+        else el.remove();
+      }
+    }
+    var inp = document.getElementById('term-input');
+    if (inp) { inp.value = ''; inp.focus(); }
   }
 
   function getUptimeStr() {
